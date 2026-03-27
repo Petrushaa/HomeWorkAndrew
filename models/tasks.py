@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
 from core.database import Base
 
+
 class Task(Base):
     __tablename__ = "tasks"
 
@@ -11,5 +12,6 @@ class Task(Base):
     completed = Column(Boolean, default=False)
     
     owner_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
-    
+
     owner = relationship("User")
+    comments = relationship("Comment", back_populates="task", cascade="all, delete-orphan")

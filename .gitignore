@@ -209,6 +209,12 @@ __marimo__/
 # Ignored directories
 fastapi-master/
 app.db
+*.db
+*.sqlite
+*.sqlite3
+tests/## GitHub Copilot Chat.md
+tests/integration/test_app.db
+tests/test_suite.db
 venv/
 __pycache__/
 *.pyc
