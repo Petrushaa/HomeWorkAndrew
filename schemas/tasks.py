@@ -8,6 +8,7 @@ class TaskCreate(BaseModel):
 class TaskResponse(TaskCreate):
     id: int
     owner_id: int
+    avatar_url: str | None = None
 
     class Config:
         from_attributes = True

@@ -2,17 +2,42 @@ version: '3.8'
 
 services:
   db:
-    image: postgres:15-alpine
-    container_name: home_andrew_db
-    restart: always
+    image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: app_db
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: homework
     ports:
       - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres_data_async:/var/lib/postgresql/data
+
+  minio:
+    image: quay.io/minio/minio:latest
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadminpassword
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+
+  app:
+    build: .
+    ports:
+      - "8080:8000"
+    environment:
+      - DB_URL=postgresql+asyncpg://postgres:password@db:5432/homework
+      - MINIO_URL=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadminpassword
+      - MINIO_BUCKET_NAME=avatars
+    depends_on:
+      - db
+      - minio
 
 volumes:
-  postgres_data:
+  postgres_data_async:
+  minio_data:

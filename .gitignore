@@ -218,3 +218,12 @@ tests/test_suite.db
 venv/
 __pycache__/
 *.pyc
+
+# Custom Docker & WSL ignores
+minio_data/
+postgres_data/
+*:Zone.Identifier
+*Zone.Identifier
+.pytest_cache/
+tests/integration/test_app.db
+tests/test_suite.db

@@ -8,7 +8,7 @@ from models.users import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 
-def get_current_user(
+async def get_current_user(
     token: str = Depends(oauth2_scheme),
     user_repo: UserRepository = Depends(UserRepository)
 ) -> User:
@@ -26,7 +26,7 @@ def get_current_user(
     except JWTError:
         raise credentials_exception
         
-    user = user_repo.db.query(User).filter(User.id == int(user_id)).first()
+    user = await user_repo.get_by_id(int(user_id))
     if user is None:
         raise credentials_exception
         
