@@ -1,10 +1,10 @@
 from fastapi import Depends
 
 from core.exceptions import CommentNotFound, TaskNotFound
-from models.comments import Comment
-from repositories.comments import CommentRepository
-from repositories.tasks import TaskRepository
-from schemas.comments import CommentCreate
+from models import Comment
+from repositories import CommentRepository
+from repositories import TaskRepository
+from schemas import CommentCreate
 
 
 class CommentService:

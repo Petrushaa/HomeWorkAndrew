@@ -3,8 +3,8 @@ from fastapi.security import OAuth2PasswordBearer
 from jose import jwt, JWTError
 
 from core.security import SECRET_KEY, ALGORITHM
-from repositories.users import UserRepository
-from models.users import User
+from repositories import UserRepository
+from models import User
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/login")
 

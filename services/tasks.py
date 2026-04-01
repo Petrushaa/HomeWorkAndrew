@@ -1,14 +1,22 @@
-from fastapi import Depends
+import uuid
+from fastapi import Depends, UploadFile, HTTPException
 
 from core.exceptions import TaskNotFound
-from models.tasks import Task
-from repositories.tasks import TaskRepository
-from schemas.tasks import TaskCreate
+from models import Task
+from repositories import TaskRepository
+from schemas import TaskCreate
+from adapters.storage.base import StorageAdapter
+from core.adapters import get_storage
 
 
 class TaskService:
-    def __init__(self, repository: TaskRepository = Depends(TaskRepository)):
+    def __init__(
+        self,
+        repository: TaskRepository = Depends(TaskRepository),
+        storage: StorageAdapter = Depends(get_storage)
+    ):
         self.repository = repository
+        self.storage = storage
 
     async def create_task(self, task_in: TaskCreate, user_id: int) -> Task:
         return await self.repository.create(task_in=task_in, user_id=user_id)
@@ -28,8 +36,19 @@ class TaskService:
             raise TaskNotFound(task_id=task_id)
         return task
         
-    async def update_avatar(self, task_id: int, user_id: int, avatar_url: str) -> Task:
-        task = await self.repository.update_avatar(task_id=task_id, user_id=user_id, avatar_url=avatar_url)
+    async def update_avatar(self, task_id: int, user_id: int, file: UploadFile) -> Task:
+        task = await self.get_task_by_id(task_id=task_id, user_id=user_id)
+        
+        content = await file.read()
+        ext = file.filename.split('.')[-1] if file.filename else "bin"
+        key = f"tasks/{task_id}_{uuid.uuid4()}.{ext}"
+        
+        try:
+            url = await self.storage.upload_file(content, key, file.content_type)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Failed to upload file to storage")
+            
+        task = await self.repository.update_avatar(task_id=task_id, user_id=user_id, avatar_url=url)
         if task is None:
             raise TaskNotFound(task_id=task_id)
         return task

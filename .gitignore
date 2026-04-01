@@ -227,3 +227,8 @@ postgres_data/
 .pytest_cache/
 tests/integration/test_app.db
 tests/test_suite.db
+
+# Env files
+.env
+.env.local
+.env.docker

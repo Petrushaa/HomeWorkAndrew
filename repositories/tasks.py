@@ -2,8 +2,8 @@ from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from core.database import get_db
-from models.tasks import Task
-from schemas.tasks import TaskCreate
+from models import Task
+from schemas import TaskCreate
 
 class TaskRepository:
     def __init__(self, db: AsyncSession = Depends(get_db)):

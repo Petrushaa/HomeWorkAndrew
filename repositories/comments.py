@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from core.database import get_db
-from models.comments import Comment
-from schemas.comments import CommentCreate
+from models import Comment
+from schemas import CommentCreate
 
 class CommentRepository:
     def __init__(self, db: AsyncSession = Depends(get_db)):

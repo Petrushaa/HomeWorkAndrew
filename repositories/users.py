@@ -5,8 +5,8 @@ from pydantic import EmailStr
 
 from core.database import get_db
 from core.security import hash_password
-from models.users import User
-from schemas.users import UserRegistrationSchema
+from models import User
+from schemas import UserRegistrationSchema
 
 class UserRepository:
     def __init__(self, db: AsyncSession = Depends(get_db)):
